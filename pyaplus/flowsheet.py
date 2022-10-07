@@ -1,11 +1,13 @@
+from __future__ import annotations
 import win32com.client as win32
 import subprocess
+
 
 class Simulation:
     """Connects to a given simulation.
         
     Args:
-        path (str): String with the raw path to the Aspen PLUS file. If "Active", chooses the open HYSYS flowsheet.
+        path (str): String with the raw path to the Aspen PLUS file.
     """ 
     def __init__(self, path: str) -> None:       
         self.path = path
@@ -19,6 +21,15 @@ class Simulation:
             visibility (int, optional): If 1, it shows the flowsheet. If 0, it keeps it invisible.. Defaults to 0.
         """        
         self.case.Visible = visibility
+        
+    def set_popups(self, popups:bool = True) -> None:
+        """Allows or supresses Aspen popups. For example, when reinitializing, it asks if
+        you are sure.
+
+        Args:
+            popups (bool, optional): State if you want or not popups. Defaults to True.
+        """
+        self.case.SuppressDialogs = popups
     
     def run(self) -> None:
         """Runs the simulation.
@@ -35,7 +46,7 @@ class Simulation:
         the task will remain and you will have to stop it from the task manage.
         
         WARNING: It will close ALL Aspen Plus instances. Cause it was not being obedient. And
-        I do not appreciate that. If you do not want it to do this, set soft = True
+        I do not appreciate that. If you do not want it to do this, set soft = True.
         """        
         self.case.Close(self.path)
         self.case.Quit()
@@ -51,20 +62,30 @@ class Simulation:
         del self
         
     @property
-    def BLOCK(self):        
+    def BLOCK(self) -> 'TreeBlock':
+        """Shortcut to access the blocks in the Aspen variable tree.
+
+        Returns:
+            TreeBlock: Element of the variable tree correspoonding to Data\Blocks
+        """                
         return self.case.Tree.Elements("Data").Elements("Blocks")
     @property
-    def STREAM(self):
+    def STREAM(self) -> 'TreeStream':
+        """Shortcut to access the streams in the Aspen variable tree.
+
+        Returns:
+            TreeStream: Element of the variable tree corresponding to Data\Streams
+        """        
         return self.case.Tree.Elements("Data").Elements("Streams")
     
-    def get_stream(self, name: str) -> any:
+    def get_stream(self, name: str) -> ProcessStream:
         """Get a stream object
 
         Args:
             name (str): Name of the stream
 
         Returns:
-            StreamObject: Stream object
+            ProcessStream: Stream object
         """        
         stream = self.STREAM.FindNode(name)
         if stream:
@@ -72,14 +93,14 @@ class Simulation:
         else:
             print(f"There is no stream with name {name} in the simulation")
     
-    def get_block(self, name:str) -> any:
+    def get_block(self, name:str) -> ProcessBlock:
         """Get a block object
 
         Args:
-            name (str): _description_
+            name (str): Name of the block
 
         Returns:
-            BlockObject: _description_
+            ProcessBlock: Block object
         """     
         block = self.BLOCK.FindNode(name)
         if block:
@@ -91,9 +112,9 @@ class ProcessStream:
     """Creates a process stream from a node in a simulation
 
     Args:
-        node (any): COM object for a node
+        node ("AspenObject"): COM object for a node
     """
-    def __init__(self, node: any) -> None:
+    def __init__(self, node: "AspenObject") -> None:
         self.stream = node 
         
     def get_properties(self, prop_list:list) -> dict:
@@ -126,17 +147,21 @@ class ProcessStream:
                       "COMPMOLEFRAC": r"MOLEFRAC\MIXED",
                       "COMPMASSFRAC": r"MASSFRAC\MIXED",
                       "VOLUMETRICFLOW": r"VOLFLMX\MIXED",
-                      "MASSENTHALPY": r"HMXMASS\MIXED",
+                      "MASSENTHALPY": r"HMX_MASS\MIXED",
                       "MOLEENTHALPY": r"HMX\MIXED",
                       }
         for property in prop_list:
             if type(property) == tuple:
                 component = "\\" + property[1]
-                property = property[0]
+                property_key = property[0]
             else:
                 component = ""
-            if property in match_dict:
-                properties[property + component] = self.stream.FindNode(r"Output\{0}{1}".format(match_dict[property], component)).Value
+                property_key = property
+            if property_key in match_dict:
+                try:
+                    properties[property] = self.stream.FindNode(r"Output\{0}{1}".format(match_dict[property_key], component)).Value
+                except AttributeError:
+                    print(f"Something went wrong with how property {property_key} is looked. Check manually")
             else:
                 print(f"Property {property} not found. May not be implemented, or doesn't exist")
         return properties
@@ -145,9 +170,9 @@ class ProcessBlock:
     """Creates a process block from a node in a simulation
 
     Args:
-        node (any): COM object for a block
+        node (AspenObject): COM object for a block
     """            
-    def __init__(self, node:any) -> None:
+    def __init__(self, node:"AspenObject") -> None:
         self.block = node
             
         
