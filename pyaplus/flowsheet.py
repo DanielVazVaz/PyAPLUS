@@ -19,7 +19,7 @@ class Simulation:
         
         Args:
             visibility (int, optional): If 1, it shows the flowsheet. If 0, it keeps it invisible.. Defaults to 0.
-        """        
+        """
         self.case.Visible = visibility
         
     def set_popups(self, popups:bool = True) -> None:
@@ -161,11 +161,51 @@ class ProcessStream:
                 try:
                     properties[property] = self.stream.FindNode(r"Output\{0}{1}".format(match_dict[property_key], component)).Value
                 except AttributeError:
-                    print(f"Something went wrong with how property {property_key} is looked. Check manually")
+                    print(f"ERROR: Something went wrong with how property {property_key} is looked. Check manually")
             else:
-                print(f"Property {property} not found. May not be implemented, or doesn't exist")
+                print(f"WARNING: Property {property} not found. May not be implemented, or doesn't exist")
         return properties
     
+    def set_properties(self, prop_dict:dict) -> None:
+        """Set the stream properties using a dictionary
+
+        Args:
+            prop_dict (dict): Dict of properties {key,value}. The valid elements of the keys are:
+            "TEMP": Temperature
+            "PRES": Pressure 
+            "FLOW": Total flow. Depends on FLOWBASIS
+            "FLOWBASIS": Basis of the total flow. Allowed values are "MASS", "MOLE", "STDVOL", or "VOLUME"
+            ("COMFLOW", "chemical"): Component flow. Depends on COMPBASIS
+            "COMPBASIS": Basis of the composition window. It can be "MASS-FLOW", "MOLE-FLOW", "STDVOL-FLOW",
+                                "MASS-FRAC", "MOLE-FRAC", "STDVOL-FRAC", "MASS-CONC" or"MOLE-CONC" 
+            "VAPFRAC": Vapor fraction
+            "FLASHTYPE": Type of the data that the streams requires. Options are "TP", "TV", or "PV", where P is pressure,
+                         T is temperature, and V is vapor fraction
+        """
+        match_dict = {"TEMP": r"TEMP\MIXED",
+                      "PRES": r"PRES\MIXED",
+                      "FLOW": r"TOTFLOW\MIXED",
+                      "FLOWBASIS": r"FLOWBASE\MIXED", 
+                      "COMPFLOW": r"FLOW\MIXED",
+                      "COMPBASIS": r"BASIS\MIXED", 
+                      "VAPFRAC": r"VFRAC\MIXED",
+                      "FLASHTYPE": r"MIXED_SPEC\MIXED"
+                    }
+        for property in prop_dict:
+            if type(property) == tuple:
+                component = "\\" + property[1]
+                property_key = property[0]
+            else:
+                component = ""
+                property_key = property
+            if property_key in match_dict:
+                try:
+                    self.stream.FindNode(r"Input\{0}{1}".format(match_dict[property_key], component)).Value = prop_dict[property]
+                except AttributeError:
+                    print(f"ERROR: Something went wrong with how property {property_key} is set. Check manually.")
+            else:
+                print(f"WARNING: Property {property} not found. May not be implemented, or doesn't exist")
+        
 class ProcessBlock:
     """Creates a process block from a node in a simulation
 
