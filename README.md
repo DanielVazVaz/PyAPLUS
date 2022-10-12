@@ -29,3 +29,15 @@ pip install pywin32==225
 ```
 
 If this still does not work, make sure that you do not have other `pywin32` in your environment, e.g., some version installed with `conda`.
+
+## Win32 shenanigans: module win32com.gen_py has no attribute 'CLSIDToPackageMap'
+
+If you get this error, which can occur from one day to the following, without having changed anything, in order to solve it, you must go to your temp folder. Normally, the path looks like:
+
+```
+C:\Users\<username>\AppData\Local\Temp
+```
+
+In there, there should be a folder named `gen_py` somewhere. Sometimes, it is inside another folder, such as `2\gen_py`. Delete it. This should fix the problem.
+
+I have no idea why this happens, or what this is. 

@@ -18,7 +18,7 @@ class Simulation:
         """Sets the visibility of the flowsheet.
         
         Args:
-            visibility (int, optional): If 1, it shows the flowsheet. If 0, it keeps it invisible.. Defaults to 0.
+            visibility (int, optional): If 1, it shows the flowsheet. If 0, it keeps it invisible. Defaults to 0.
         """
         self.case.Visible = visibility
         
@@ -101,7 +101,7 @@ class Simulation:
 
         Returns:
             ProcessBlock: Block object
-        """     
+        """
         block = self.BLOCK.FindNode(name)
         if block:
             return ProcessBlock(block)
@@ -121,17 +121,17 @@ class ProcessStream:
         """Gets the stream properties in a dictionary
 
         Args:
-            prop_list (list): List of properties. The valid elements of the list are:\n
-            "TEMP": Temperature\n
-            "PRES": Pressure\n
-            "MOLEFLOW": Molar flow\n
-            ("COMPMOLEFLOW", "chemical"): Component molar flow of a chemical\n
-            "MASSFLOW": Mass flow\n
-            ("COMPMASSFLOW", "chemical"): Component mass flow of a chemical\n
-            ("COMPMASSFRAC", "chemical"): Component mass fraction of a chemical\n
-            ("COMPMOLEFRAC", "chemical"): Component mole fraction of a chemical\n
-            "VOLUMETRICFLOW": Volumetric flow\n
-            "MASSENTHALPY": Enthalpy per unit of mass\n
+            prop_list (list): List of properties. The valid elements of the list are:
+            "TEMP": Temperature
+            "PRES": Pressure
+            "MOLEFLOW": Molar flow
+            ("COMPMOLEFLOW", "chemical"): Component molar flow of a chemical
+            "MASSFLOW": Mass flow
+            ("COMPMASSFLOW", "chemical"): Component mass flow of a chemical
+            ("COMPMASSFRAC", "chemical"): Component mass fraction of a chemical
+            ("COMPMOLEFRAC", "chemical"): Component mole fraction of a chemical
+            "VOLUMETRICFLOW": Volumetric flow
+            "MASSENTHALPY": Enthalpy per unit of mass
             "MOLEENTHALPY": Enthalpy per mole unit
         
         Returns:
@@ -175,7 +175,7 @@ class ProcessStream:
             "PRES": Pressure 
             "FLOW": Total flow. Depends on FLOWBASIS
             "FLOWBASIS": Basis of the total flow. Allowed values are "MASS", "MOLE", "STDVOL", or "VOLUME"
-            ("COMFLOW", "chemical"): Component flow. Depends on COMPBASIS
+            ("COMPFLOW", "chemical"): Component flow. Depends on COMPBASIS
             "COMPBASIS": Basis of the composition window. It can be "MASS-FLOW", "MOLE-FLOW", "STDVOL-FLOW",
                                 "MASS-FRAC", "MOLE-FRAC", "STDVOL-FRAC", "MASS-CONC" or"MOLE-CONC" 
             "VAPFRAC": Vapor fraction
