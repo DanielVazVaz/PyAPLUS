@@ -168,7 +168,7 @@ class ProcessStream:
                 print(f"WARNING: Property {property} not found. May not be implemented, or doesn't exist")
         return properties
     
-    def set_properties(self, prop_dict:dict) -> None:
+    def set_properties(self, prop_dict:dict) -> None:     
         """Set the stream properties using a dictionary
 
         Args:
@@ -179,7 +179,7 @@ class ProcessStream:
             "FLOWBASIS": Basis of the total flow. Allowed values are "MASS", "MOLE", "STDVOL", or "VOLUME"
             ("COMPFLOW", "chemical"): Component flow. Depends on COMPBASIS
             "COMPBASIS": Basis of the composition window. It can be "MASS-FLOW", "MOLE-FLOW", "STDVOL-FLOW",
-                                "MASS-FRAC", "MOLE-FRAC", "STDVOL-FRAC", "MASS-CONC" or"MOLE-CONC" 
+            "MASS-FRAC", "MOLE-FRAC", "STDVOL-FRAC", "MASS-CONC" or"MOLE-CONC" 
             "VAPFRAC": Vapor fraction
             "FLASHTYPE": Type of the data that the streams requires. Options are "TP", "TV", or "PV", where P is pressure, T is temperature, and V is vapor fraction
         """
