@@ -1,6 +1,6 @@
 # PyAPLUS
 
-[![Documentation Status](https://readthedocs.org/projects/pyaplus-docs/badge/?version=latest)](https://pyaplus-docs.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/pyaplus/badge/?version=latest)](https://pyaplus.readthedocs.io/en/latest/?badge=latest)
 
 Abstraction layer over the COM ASPEN PLUS interface using Python. If you can though, and I cannot recommend this enough, use HYSYS. The state is absolute pre-alpha right now, and it is only able to make reading some properties from streams quicker and to access them without that much code.
 
