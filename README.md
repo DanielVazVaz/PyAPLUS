@@ -1,4 +1,7 @@
 # PyAPLUS
+
+[![Documentation Status](https://readthedocs.org/projects/pyaplus-docs/badge/?version=latest)](https://pyaplus-docs.readthedocs.io/en/latest/?badge=latest)
+
 Abstraction layer over the COM ASPEN PLUS interface using Python. If you can though, and I cannot recommend this enough, use HYSYS. The state is absolute pre-alpha right now, and it is only able to make reading some properties from streams quicker and to access them without that much code.
 
 ## Installation
@@ -18,7 +21,8 @@ pip install -e .
 </pre>
 
 ## Closing the simulation
-Aspen Plus does not behave as nicely as HYSYS. Therefore, there is a forced closure programmed as the default that kills the task in the windows task manager, and all tasks with a shared name, i.e., AspenPlus.exe. If this is too extreme for you, you can remove this behavior by passing an argument to the `Simulation.close()` method, in the form `Simulation.close(soft = True)`. This probably will leave an Aspen Plus task in the background. If someone finds a less drastic way to make sure that Aspen Plus closes when you tell it to, I'm all ears. 
+
+Aspen Plus does not behave as nicely as HYSYS. Therefore, there is a forced closure programmed as the default that kills the task in the windows task manager, and all tasks with a shared name, i.e., AspenPlus.exe. If this is too extreme for you, you can remove this behavior by passing an argument to the `Simulation.close()` method, in the form `Simulation.close(soft = True)`. This probably will leave an Aspen Plus task in the background. If someone finds a less drastic way to make sure that Aspen Plus closes when you tell it to, I'm all ears.
 
 ## win32 DLL problem
 

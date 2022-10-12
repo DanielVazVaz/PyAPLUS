@@ -1,5 +1,4 @@
 from __future__ import annotations
-import win32com.client as win32
 import subprocess
 
 
@@ -9,7 +8,10 @@ class Simulation:
     Args:
         path (str): String with the raw path to the Aspen PLUS file.
     """ 
-    def __init__(self, path: str) -> None:       
+    def __init__(self, path: str) -> None:     
+        
+        import win32com.client as win32  
+        
         self.path = path
         self.case = win32.Dispatch('Apwn.Document')
         self.case.InitFromArchive2(path)
@@ -179,8 +181,7 @@ class ProcessStream:
             "COMPBASIS": Basis of the composition window. It can be "MASS-FLOW", "MOLE-FLOW", "STDVOL-FLOW",
                                 "MASS-FRAC", "MOLE-FRAC", "STDVOL-FRAC", "MASS-CONC" or"MOLE-CONC" 
             "VAPFRAC": Vapor fraction
-            "FLASHTYPE": Type of the data that the streams requires. Options are "TP", "TV", or "PV", where P is pressure,
-                         T is temperature, and V is vapor fraction
+            "FLASHTYPE": Type of the data that the streams requires. Options are "TP", "TV", or "PV", where P is pressure, T is temperature, and V is vapor fraction
         """
         match_dict = {"TEMP": r"TEMP\MIXED",
                       "PRES": r"PRES\MIXED",
